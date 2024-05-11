@@ -2,7 +2,8 @@
 
 export default {
   translation: {
-    appName: 'Fastify Boilerplate',
+    appName: 'Task manager',
+    sourceCode: 'Source code',
     flash: {
       session: {
         create: {

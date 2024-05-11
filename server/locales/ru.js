@@ -2,7 +2,8 @@
 
 export default {
   translation: {
-    appName: 'Fastify Шаблон',
+    appName: 'Менеджер задач',
+    sourceCode: 'Исходный код',
     flash: {
       session: {
         create: {
