@@ -17,6 +17,14 @@ export const development = {
   useNullAsDefault: true,
   migrations,
 };
+/*
+export const development = {
+  client: 'pg',
+  connection: 'postgres://<username>:<password>@localhost:5432/<dbname>',
+  useNullAsDefault: true,
+  migrations,
+};
+*/
 
 export const test = {
   client: 'sqlite3',

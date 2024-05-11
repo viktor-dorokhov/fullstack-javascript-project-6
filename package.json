@@ -10,6 +10,7 @@
       "prebuild": "rm -rf dist",
       "test": "jest --verbose --runInBand",
       "build": "webpack",
+      "db-migrate": "npx knex migrate:latest",
       "start": "fastify start -a 0.0.0.0 server/plugin.js -l debug -P -o"
    },
    "jest": {

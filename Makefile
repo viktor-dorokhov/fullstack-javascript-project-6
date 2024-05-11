@@ -4,7 +4,7 @@ install:
 	npm install
 
 db-migrate:
-	npx knex migrate:latest
+	npm db-migrate
 
 build:
 	npm run build
