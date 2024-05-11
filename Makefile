@@ -4,7 +4,7 @@ install:
 	npm install
 
 db-migrate:
-	npm db-migrate
+	npm run db-migrate
 
 build:
 	npm run build
