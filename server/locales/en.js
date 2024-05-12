@@ -43,12 +43,27 @@ export default {
           error: 'Failed to delete status',
         },
       },
+      labels: {
+        create: {
+          success: 'Label created successfully',
+          error: 'Failed to create',
+        },
+        update: {
+          success: 'Label updated successfully',
+          error: 'Failed to update label',
+        },
+        delete: {
+          success: 'Label deleted successfully',
+          error: 'Failed to delete label',
+        },
+      },
       authError: 'Access denied! Please login',
     },
     layouts: {
       application: {
         users: 'Users',
         statuses: 'Statuses',
+        labels: 'Labels',
         signIn: 'Login',
         signUp: 'Register',
         signOut: 'Logout',
@@ -98,6 +113,23 @@ export default {
         },
         update: {
           title: 'Update status',
+          submit: 'Save',
+        },
+      },
+      labels: {
+        labels: 'Labels',
+        createAction: 'Create label',
+        id: 'ID',
+        name: 'Name',
+        updateAction: 'Update',
+        deleteAction: 'Delete',
+        createdAt: 'Created at',
+        new: {
+          title: 'Create label',
+          submit: 'Create',
+        },
+        update: {
+          title: 'Update label',
           submit: 'Save',
         },
       },

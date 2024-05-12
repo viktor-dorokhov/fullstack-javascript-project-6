@@ -26,9 +26,18 @@ export const getFakeStatus = () => ({
 
 export const prepareStatusesData = async (app) => {
   const { knex } = app.objection;
-
   const statuses = Array(10).fill().map(getFakeStatus);
   await knex('statuses').insert(statuses);
+};
+
+export const getFakeLabel = () => ({
+  name: faker.word.adjective(),
+});
+
+export const prepareLabelsData = async (app) => {
+  const { knex } = app.objection;
+  const statuses = Array(10).fill().map(getFakeLabel);
+  await knex('labels').insert(statuses);
 };
 
 export const signInApp = async (app) => {
