@@ -5,7 +5,7 @@ import fastify from 'fastify';
 
 import init from '../server/plugin.js';
 import encrypt from '../server/lib/secure.cjs';
-import { getTestData, prepareData, signInApp } from './helpers/index.js';
+import { getTestData, prepareUsersData, signInApp } from './helpers/index.js';
 
 describe('test users CRUD', () => {
   let app;
@@ -22,8 +22,8 @@ describe('test users CRUD', () => {
     knex = app.objection.knex;
     models = app.objection.models;
 
-    await knex.migrate.latest();
-    await prepareData(app);
+    // await knex.migrate.latest();
+    // await prepareUsersData(app);
   });
 
   beforeEach(async () => {
@@ -31,7 +31,7 @@ describe('test users CRUD', () => {
     // перед каждым тестом выполняем миграции
     // и заполняем БД тестовыми данными
     await knex.migrate.latest();
-    await prepareData(app);
+    await prepareUsersData(app);
   });
 
   it('index', async () => {
@@ -71,6 +71,39 @@ describe('test users CRUD', () => {
     expect(user).toMatchObject(expected);
   });
 
+  it('edit', async () => {
+    const existingParams = testData.users.existing;
+    const userExisting = await models.user.query().findOne({ email: existingParams.email });
+    const { id } = userExisting;
+
+    const request = {
+      method: 'GET',
+      url: app.reverse('editUser', { id }),
+    };
+
+    // no render without auth
+    const responseNoAuth = await app.inject(request);
+    expect(responseNoAuth.statusCode).toBe(302);
+
+    const sessionCookie = await signInApp(app);
+
+    // no render with another id
+    const idAnother = 3;
+    const requestAnother = {
+      method: 'GET',
+      url: app.reverse('editUser', { id: idAnother }),
+    };
+    const responseAnother = await app.inject(requestAnother);
+    expect(responseAnother.statusCode).toBe(302);
+
+    // render with auth and owner id
+    const responseWithAuth = await app.inject({
+      ...request,
+      cookies: sessionCookie,
+    });
+    expect(responseWithAuth.statusCode).toBe(200);
+  });
+
   it('update', async () => {
     const existingParams = testData.users.existing;
     const userExisting = await models.user.query().findOne({ email: existingParams.email });
@@ -79,7 +112,7 @@ describe('test users CRUD', () => {
 
     const request = {
       method: 'PATCH',
-      url: `/users/${id}`,
+      url: app.reverse('oneUser', { id }),
       payload: {
         data: updateParams,
       },
@@ -92,16 +125,12 @@ describe('test users CRUD', () => {
     expect(userExistingSame).toMatchObject(userExisting);
 
     const sessionCookie = await signInApp(app);
-    const responseWithAuth = await app.inject({
-      ...request,
-      cookies: sessionCookie,
-    });
 
     // no changes with another id
     const idAnother = 3;
     const requestAnother = {
       method: 'PATCH',
-      url: `/users/${idAnother}`,
+      url: app.reverse('oneUser', { id: idAnother }),
       payload: {
         data: updateParams,
       },
@@ -114,6 +143,10 @@ describe('test users CRUD', () => {
     expect(userExistingAnotherSame).toMatchObject(userExistingAnother);
 
     // changes with auth and owner id
+    const responseWithAuth = await app.inject({
+      ...request,
+      cookies: sessionCookie,
+    });
     expect(responseWithAuth.statusCode).toBe(302);
     const expected = {
       ..._.omit(updateParams, 'password'),
@@ -131,7 +164,7 @@ describe('test users CRUD', () => {
     const sessionCookie = await signInApp(app);
     const request = {
       method: 'DELETE',
-      url: `/users/${id}`,
+      url: app.reverse('oneUser', { id }),
     };
 
     // no deletion without auth
@@ -144,7 +177,7 @@ describe('test users CRUD', () => {
     const idAnother = 3;
     const requestAnother = {
       method: 'DELETE',
-      url: `/users/${idAnother}`,
+      url: app.reverse('oneUser', { id: idAnother }),
       cookies: sessionCookie,
     };
     const responseAnother = await app.inject(requestAnother);
@@ -158,8 +191,8 @@ describe('test users CRUD', () => {
       cookies: sessionCookie,
     });
     expect(responseWithAuth.statusCode).toBe(302);
-    const deletedUser = await models.user.query().findById(id);
-    expect(deletedUser).toBeUndefined();
+    const userDelete = await models.user.query().findById(id);
+    expect(userDelete).toBeUndefined();
   });
 
   afterEach(async () => {

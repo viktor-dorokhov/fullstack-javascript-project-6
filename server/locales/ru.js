@@ -29,11 +29,26 @@ export default {
         },
         onlyOwnerAccess: 'Вы не можете редактировать или удалять другого пользователя',
       },
+      statuses: {
+        create: {
+          success: 'Статус успешно создан',
+          error: 'Не удалось создать статус',
+        },
+        update: {
+          success: 'Статус успешно изменён',
+          error: 'Не удалось изменить статус',
+        },
+        delete: {
+          success: 'Статус успешно удалён',
+          error: 'Не удалось удалить статус',
+        },
+      },
       authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
     },
     layouts: {
       application: {
         users: 'Пользователи',
+        statuses: 'Статусы',
         signIn: 'Вход',
         signUp: 'Регистрация',
         signOut: 'Выход',
@@ -66,6 +81,23 @@ export default {
         },
         update: {
           title: 'Изменение пользователя',
+          submit: 'Изменить',
+        },
+      },
+      statuses: {
+        statuses: 'Статусы',
+        createAction: 'Создать статус',
+        id: 'ID',
+        name: 'Имя',
+        updateAction: 'Изменить',
+        deleteAction: 'Удалить',
+        createdAt: 'Дата создания',
+        new: {
+          title: 'Создание статуса',
+          submit: 'Создать',
+        },
+        update: {
+          title: 'Изменение статуса',
           submit: 'Изменить',
         },
       },
