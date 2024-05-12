@@ -33,10 +33,10 @@ html(lang="en")
         each message in messages
           div.alert(class=`alert-${getAlertClass(type)}`)= message
 
-      h1.my-4
+      h1.display-5.my-3
         block header
       block content
 
-    footer
-      .container.my-5.pt-4.border-top
+    footer.border-top.bg-light.border-top.mt-4
+      .container.py-4
         a(target="_blank" href="https://github.com/viktor-dorokhov/fullstack-javascript-project-6")= t('sourceCode')

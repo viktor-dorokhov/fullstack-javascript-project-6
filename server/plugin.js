@@ -61,7 +61,7 @@ const setUpStaticAssets = (app) => {
 const setupLocalization = async () => {
   await i18next
     .init({
-      lng: 'en',
+      lng: 'ru',
       fallbackLng: 'ru',
       // debug: isDevelopment,
       resources: {
@@ -75,6 +75,7 @@ const addHooks = (app) => {
   app.addHook('preHandler', async (req, reply) => {
     reply.locals = {
       isAuthenticated: () => req.isAuthenticated(),
+      getUserId: () => req.user?.id,
     };
   });
 };
@@ -107,6 +108,14 @@ const registerPlugins = async (app) => {
     },
   // @ts-ignore
   )(...args));
+
+  app.decorate('onlyOwnerAccess', (req, reply, done) => {
+    if (Number(req.params.id) !== req.user.id) {
+      req.flash('error', i18next.t('flash.users.onlyOwnerAccess'));
+      reply.redirect(app.reverse('users'));
+    }
+    done();
+  });
 
   await app.register(fastifyMethodOverride);
   await app.register(fastifyObjectionjs, {

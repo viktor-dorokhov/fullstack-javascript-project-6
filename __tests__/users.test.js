@@ -5,7 +5,7 @@ import fastify from 'fastify';
 
 import init from '../server/plugin.js';
 import encrypt from '../server/lib/secure.cjs';
-import { getTestData, prepareData } from './helpers/index.js';
+import { getTestData, prepareData, signInApp } from './helpers/index.js';
 
 describe('test users CRUD', () => {
   let app;
@@ -22,15 +22,16 @@ describe('test users CRUD', () => {
     knex = app.objection.knex;
     models = app.objection.models;
 
-    // TODO: пока один раз перед тестами
-    // тесты не должны зависеть друг от друга
-    // перед каждым тестом выполняем миграции
-    // и заполняем БД тестовыми данными
     await knex.migrate.latest();
     await prepareData(app);
   });
 
   beforeEach(async () => {
+    // тесты не должны зависеть друг от друга
+    // перед каждым тестом выполняем миграции
+    // и заполняем БД тестовыми данными
+    await knex.migrate.latest();
+    await prepareData(app);
   });
 
   it('index', async () => {
@@ -70,10 +71,100 @@ describe('test users CRUD', () => {
     expect(user).toMatchObject(expected);
   });
 
+  it('update', async () => {
+    const existingParams = testData.users.existing;
+    const userExisting = await models.user.query().findOne({ email: existingParams.email });
+    const { id } = userExisting;
+    const updateParams = testData.users.update;
+
+    const request = {
+      method: 'PATCH',
+      url: `/users/${id}`,
+      payload: {
+        data: updateParams,
+      },
+    };
+
+    // no changes without auth
+    const responseNoAuth = await app.inject(request);
+    expect(responseNoAuth.statusCode).toBe(302);
+    const userExistingSame = await models.user.query().findById(id);
+    expect(userExistingSame).toMatchObject(userExisting);
+
+    const sessionCookie = await signInApp(app);
+    const responseWithAuth = await app.inject({
+      ...request,
+      cookies: sessionCookie,
+    });
+
+    // no changes with another id
+    const idAnother = 3;
+    const requestAnother = {
+      method: 'PATCH',
+      url: `/users/${idAnother}`,
+      payload: {
+        data: updateParams,
+      },
+      cookies: sessionCookie,
+    };
+    const userExistingAnother = await models.user.query().findById(idAnother);
+    const responseAnother = await app.inject(requestAnother);
+    expect(responseAnother.statusCode).toBe(302);
+    const userExistingAnotherSame = await models.user.query().findById(idAnother);
+    expect(userExistingAnotherSame).toMatchObject(userExistingAnother);
+
+    // changes with auth and owner id
+    expect(responseWithAuth.statusCode).toBe(302);
+    const expected = {
+      ..._.omit(updateParams, 'password'),
+      passwordDigest: encrypt(updateParams.password),
+    };
+    const userUpdate = await models.user.query().findById(id);
+    expect({ ...userExisting, ...expected }).toMatchObject(userUpdate);
+  });
+
+  it('delete', async () => {
+    const existingParams = testData.users.existing;
+    const userExisting = await models.user.query().findOne({ email: existingParams.email });
+    const { id } = userExisting;
+
+    const sessionCookie = await signInApp(app);
+    const request = {
+      method: 'DELETE',
+      url: `/users/${id}`,
+    };
+
+    // no deletion without auth
+    const responseNoAuth = await app.inject(request);
+    expect(responseNoAuth.statusCode).toBe(302);
+    const userExistingSame = await models.user.query().findById(id);
+    expect(userExistingSame).not.toBeUndefined();
+
+    // no deletion with another id
+    const idAnother = 3;
+    const requestAnother = {
+      method: 'DELETE',
+      url: `/users/${idAnother}`,
+      cookies: sessionCookie,
+    };
+    const responseAnother = await app.inject(requestAnother);
+    expect(responseAnother.statusCode).toBe(302);
+    const userExistingAnother = await models.user.query().findById(idAnother);
+    expect(userExistingAnother).not.toBeUndefined();
+
+    // deletion with Auth and owner id
+    const responseWithAuth = await app.inject({
+      ...request,
+      cookies: sessionCookie,
+    });
+    expect(responseWithAuth.statusCode).toBe(302);
+    const deletedUser = await models.user.query().findById(id);
+    expect(deletedUser).toBeUndefined();
+  });
+
   afterEach(async () => {
-    // Пока Segmentation fault: 11
     // после каждого теста откатываем миграции
-    // await knex.migrate.rollback();
+    await knex.migrate.rollback();
   });
 
   afterAll(async () => {
