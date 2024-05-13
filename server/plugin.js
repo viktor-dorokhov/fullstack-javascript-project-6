@@ -16,6 +16,7 @@ import fastifyObjectionjs from 'fastify-objectionjs';
 import qs from 'qs';
 import Pug from 'pug';
 import i18next from 'i18next';
+import Rollbar from 'rollbar';
 
 import ru from './locales/ru.js';
 import en from './locales/en.js';
@@ -30,6 +31,13 @@ const __dirname = fileURLToPath(path.dirname(import.meta.url));
 
 const mode = process.env.NODE_ENV || 'development';
 // const isDevelopment = mode === 'development';
+
+const rollbar = new Rollbar({
+  enabled: mode === 'production',
+  accessToken: process.env.ROLLBAR_ACCESS_TOKEN,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+});
 
 const setUpViews = (app) => {
   const helpers = getHelpers(app);
@@ -77,6 +85,9 @@ const addHooks = (app) => {
       isAuthenticated: () => req.isAuthenticated(),
       getUserId: () => req.user?.id,
     };
+  });
+  app.addHook('onError', async (req, reply, error) => {
+    rollbar.log(error);
   });
 };
 
