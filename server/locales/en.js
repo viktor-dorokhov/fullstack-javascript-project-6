@@ -32,7 +32,7 @@ export default {
       statuses: {
         create: {
           success: 'Status created successfully',
-          error: 'Failed to create',
+          error: 'Failed to create status',
         },
         update: {
           success: 'Status updated successfully',
@@ -46,7 +46,7 @@ export default {
       labels: {
         create: {
           success: 'Label created successfully',
-          error: 'Failed to create',
+          error: 'Failed to create label',
         },
         update: {
           success: 'Label updated successfully',
@@ -57,6 +57,20 @@ export default {
           error: 'Failed to delete label',
         },
       },
+      tasks: {
+        create: {
+          success: 'Task created successfully',
+          error: 'Failed to create task',
+        },
+        update: {
+          success: 'Task updated successfully',
+          error: 'Failed to update task',
+        },
+        delete: {
+          success: 'Task deleted successfully',
+          error: 'Failed to delete task',
+        },
+      },
       authError: 'Access denied! Please login',
     },
     layouts: {
@@ -64,6 +78,7 @@ export default {
         users: 'Users',
         statuses: 'Statuses',
         labels: 'Labels',
+        tasks: 'Tasks',
         signIn: 'Login',
         signUp: 'Register',
         signOut: 'Logout',
@@ -130,6 +145,28 @@ export default {
         },
         update: {
           title: 'Update label',
+          submit: 'Save',
+        },
+      },
+      tasks: {
+        tasks: 'Tasks',
+        createAction: 'Create task',
+        id: 'ID',
+        name: 'Name',
+        description: 'Description',
+        status: 'Status',
+        creator: 'Creator',
+        executor: 'Executor',
+        labels: 'Labels',
+        updateAction: 'Update',
+        deleteAction: 'Delete',
+        createdAt: 'Created at',
+        new: {
+          title: 'Create task',
+          submit: 'Create',
+        },
+        update: {
+          title: 'Update task',
           submit: 'Save',
         },
       },

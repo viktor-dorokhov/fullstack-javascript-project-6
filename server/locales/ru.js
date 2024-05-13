@@ -49,12 +49,26 @@ export default {
           error: 'Не удалось создать метку',
         },
         update: {
-          success: 'Метка успешно изменён',
+          success: 'Метка успешно изменена',
           error: 'Не удалось изменить метку',
         },
         delete: {
-          success: 'Метка успешно удалён',
+          success: 'Метка успешно удалена',
           error: 'Не удалось удалить метку',
+        },
+      },
+      tasks: {
+        create: {
+          success: 'Задача успешно создана',
+          error: 'Не удалось создать задачу',
+        },
+        update: {
+          success: 'Задача успешно изменена',
+          error: 'Не удалось изменить задачу',
+        },
+        delete: {
+          success: 'Задача успешно удалена',
+          error: 'Не удалось удалить задачу',
         },
       },
       authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
@@ -64,6 +78,7 @@ export default {
         users: 'Пользователи',
         statuses: 'Статусы',
         labels: 'Метки',
+        tasks: 'Задачи',
         signIn: 'Вход',
         signUp: 'Регистрация',
         signOut: 'Выход',
@@ -130,6 +145,28 @@ export default {
         },
         update: {
           title: 'Изменение метки',
+          submit: 'Изменить',
+        },
+      },
+      tasks: {
+        tasks: 'Задачи',
+        createAction: 'Создать задачу',
+        id: 'ID',
+        name: 'Наименование',
+        description: 'Описание',
+        status: 'Статус',
+        creator: 'Автор',
+        executor: 'Исполнитель',
+        labels: 'Метки',
+        updateAction: 'Изменить',
+        deleteAction: 'Удалить',
+        createdAt: 'Дата создания',
+        new: {
+          title: 'Создание задачи',
+          submit: 'Создать',
+        },
+        update: {
+          title: 'Изменение задачи',
           submit: 'Изменить',
         },
       },
