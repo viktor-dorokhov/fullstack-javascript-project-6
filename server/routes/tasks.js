@@ -68,12 +68,11 @@ export default (app) => {
         });
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
-      } catch (e) {
-        req.flash('error', JSON.stringify(e));
+      } catch ({ data }) {
         req.flash('error', i18next.t('flash.tasks.create.error'));
         const { users, statuses, labels } = await getRelatedData();
         reply.render('tasks/new', {
-          task: originalData, statuses, users, labels, errors: e.data,
+          task: originalData, statuses, users, labels, errors: data,
         });
       }
       return reply;
