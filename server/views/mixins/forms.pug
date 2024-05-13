@@ -61,6 +61,9 @@ mixin select(entity, propertyName, label, errors = {}, multiple = false)
 mixin submit(form = null)
   input(class='btn btn-primary' type='submit')&attributes(attributes)
 
+mixin back(text, path, marginCls = 'mx-3')
+  a.btn.btn-secondary(class=marginCls href=path)&attributes(attributes)= text
+
 mixin buttonTo(action, method)
   form(action=action, method="post")
     input(name="_method" type="hidden" value=method)

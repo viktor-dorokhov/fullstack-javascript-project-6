@@ -108,10 +108,12 @@ export default {
         new: {
           submit: 'Register',
           signUp: 'Register',
+          back: 'Back',
         },
         update: {
           title: 'Update user',
           submit: 'Save',
+          back: 'Cancel',
         },
       },
       statuses: {
@@ -125,10 +127,12 @@ export default {
         new: {
           title: 'Create status',
           submit: 'Create',
+          back: 'Cancel',
         },
         update: {
           title: 'Update status',
           submit: 'Save',
+          back: 'Cancel',
         },
       },
       labels: {
@@ -142,10 +146,12 @@ export default {
         new: {
           title: 'Create label',
           submit: 'Create',
+          back: 'Cancel',
         },
         update: {
           title: 'Update label',
           submit: 'Save',
+          back: 'Cancel',
         },
       },
       tasks: {
@@ -161,13 +167,21 @@ export default {
         updateAction: 'Update',
         deleteAction: 'Delete',
         createdAt: 'Created at',
+        label: 'Label',
+        onlyMyTasks: 'Only my tasks',
+        showAction: 'Show',
         new: {
           title: 'Create task',
           submit: 'Create',
+          back: 'Cancel',
         },
         update: {
           title: 'Update task',
           submit: 'Save',
+          back: 'Cancel',
+        },
+        show: {
+          back: 'Back',
         },
       },
       welcome: {

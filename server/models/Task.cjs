@@ -1,9 +1,6 @@
 // @ts-check
 
 const BaseModel = require('./BaseModel.cjs');
-const User = require('./User.cjs');
-const Status = require('./Status.cjs');
-const Label = require('./Label.cjs');
 
 module.exports = class Task extends BaseModel {
   static get tableName() {
@@ -18,9 +15,9 @@ module.exports = class Task extends BaseModel {
         id: { type: 'integer' },
         name: { type: 'string', minLength: 1 },
         description: { type: 'string' },
-        statusId: { type: 'integer' },
+        statusId: { type: 'integer', minimum: 1 },
         creatorId: { type: 'integer' },
-        executorId: { type: 'integer' },
+        executorId: { type: ['integer', 'null'] },
       },
     };
   }
@@ -29,7 +26,7 @@ module.exports = class Task extends BaseModel {
     return {
       status: {
         relation: BaseModel.BelongsToOneRelation,
-        modelClass: Status,
+        modelClass: './Status.cjs',
         join: {
           from: 'tasks.statusId',
           to: 'statuses.id',
@@ -37,7 +34,7 @@ module.exports = class Task extends BaseModel {
       },
       creator: {
         relation: BaseModel.BelongsToOneRelation,
-        modelClass: User,
+        modelClass: './User.cjs',
         join: {
           from: 'tasks.creatorId',
           to: 'users.id',
@@ -45,7 +42,7 @@ module.exports = class Task extends BaseModel {
       },
       executor: {
         relation: BaseModel.BelongsToOneRelation,
-        modelClass: User,
+        modelClass: './User.cjs',
         join: {
           from: 'tasks.executorId',
           to: 'users.id',
@@ -53,7 +50,7 @@ module.exports = class Task extends BaseModel {
       },
       labels: {
         relation: BaseModel.ManyToManyRelation,
-        modelClass: Label,
+        modelClass: './Label.cjs',
         join: {
           from: 'tasks.id',
           through: {

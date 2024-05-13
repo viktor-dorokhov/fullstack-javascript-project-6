@@ -10,3 +10,4 @@ block content
     +input(user, 'email', t('views.users.email'), errors)(type="text")
     +input(user, 'password', t('views.users.password'), errors)(type="password")
     +submit(user)(value=t('views.users.new.submit'))
+    +back(t('views.users.new.back'), route('users'))

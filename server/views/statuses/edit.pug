@@ -8,3 +8,4 @@ block content
     input(type="hidden" name="_method" value="patch")
     +input(status, 'name', t('views.statuses.name'), errors)(type="text")
     +submit(status)(value=t('views.statuses.update.submit'))
+    +back(t('views.statuses.update.back'), route('statuses'))

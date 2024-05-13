@@ -19,8 +19,25 @@ export default (app) => {
 
   app
     .get('/tasks', { name: 'tasks', preValidation: app.authenticate }, async (req, reply) => {
-      const tasks = await TaskModel.query().withGraphFetched('[status, creator, executor, labels]');
-      reply.render('tasks/index', { tasks });
+      const { query: filterQuery } = req;
+      let query = TaskModel.query();
+      if (filterQuery.status) {
+        query = query.where('statusId', filterQuery.status);
+      }
+      if (filterQuery.executor) {
+        query = query.where('executorId', filterQuery.executor);
+      }
+      if (filterQuery.label) {
+        query = query.joinRelated('labels').where('labels.id', filterQuery.label);
+      }
+      if (filterQuery.isCreatorUser) {
+        query = query.where('creatorId', req.user.id);
+      }
+      const tasks = await query.withGraphFetched('[status, creator, executor, labels]');
+      const { users, statuses, labels } = await getRelatedData();
+      reply.render('tasks/index', {
+        tasks, users, statuses, labels, form: filterQuery,
+      });
       return reply;
     })
     .get('/tasks/new', { name: 'newTask', preValidation: app.authenticate }, async (req, reply) => {
@@ -36,8 +53,8 @@ export default (app) => {
       const labelIds = [].concat((req.body.data.labels || [])).map((l) => ({ id: Number(l) }));
       const taskData = {
         ...originalData,
-        statusId: Number(originalData.statusId) || undefined,
-        executorId: Number(originalData.executorId),
+        statusId: Number(originalData.statusId),
+        executorId: Number(originalData.executorId) || null,
         creatorId: req.user.id,
         labels: labelIds,
       };
@@ -51,34 +68,60 @@ export default (app) => {
         });
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
-      } catch ({ data }) {
+      } catch (e) {
+        req.flash('error', JSON.stringify(e));
         req.flash('error', i18next.t('flash.tasks.create.error'));
         const { users, statuses, labels } = await getRelatedData();
         reply.render('tasks/new', {
-          task: originalData, statuses, users, labels, errors: data,
+          task: originalData, statuses, users, labels, errors: e.data,
         });
       }
       return reply;
     })
     .get('/tasks/:id/edit', { name: 'editTask', preValidation: app.authenticate }, async (req, reply) => {
       const { id } = req.params;
-      const task = await TaskModel.query().findById(id);
-      reply.render('tasks/edit', { task });
+      const task = await TaskModel.query().withGraphFetched('[labels]').findById(id);
+      const { users, statuses, labels } = await getRelatedData();
+      reply.render('tasks/edit', {
+        task, users, statuses, labels,
+      });
       return reply;
     })
-    .patch('/tasks/:id', { name: 'oneTask', preValidation: app.authenticate }, async (req, reply) => {
+    .get('/tasks/:id', { name: 'oneTask', preValidation: app.authenticate }, async (req, reply) => {
       const { id } = req.params;
-      const task = await TaskModel.query().findById(id);
-
+      const task = await TaskModel.query().withGraphFetched('[status, creator, executor, labels]').findById(id);
+      reply.render('tasks/show', { task });
+      return reply;
+    })
+    .patch('/tasks/:id', { preValidation: app.authenticate }, async (req, reply) => {
+      const { id } = req.params;
+      const originalData = req.body.data;
+      const labelIds = [].concat((req.body.data.labels || [])).map((l) => ({ id: Number(l) }));
+      const taskData = {
+        ...originalData,
+        id: Number(id),
+        statusId: Number(originalData.statusId),
+        executorId: Number(originalData.executorId) || null,
+        creatorId: req.user.id,
+        labels: labelIds,
+      };
       try {
-        await task.$query().patch(req.body.data);
+        await TaskModel.transaction(async (trx) => {
+          await TaskModel.query(trx)
+            .allowGraph('labels')
+            .upsertGraph(taskData, {
+              relate: true, unrelate: true, undelete: true,
+            });
+        });
         req.flash('info', i18next.t('flash.tasks.update.success'));
         reply.redirect(app.reverse('tasks'));
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.tasks.update.error'));
-        reply.render('tasks/edit', { task, errors: data });
+        const { users, statuses, labels } = await getRelatedData();
+        reply.render('tasks/edit', {
+          task: { ...originalData, id }, statuses, users, labels, errors: data,
+        });
       }
-
       return reply;
     })
     .delete('/tasks/:id', { preValidation: app.authenticate }, async (req, reply) => {

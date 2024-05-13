@@ -108,44 +108,50 @@ export default {
         new: {
           submit: 'Сохранить',
           signUp: 'Регистрация',
+          back: 'Назад',
         },
         update: {
           title: 'Изменение пользователя',
           submit: 'Изменить',
+          back: 'Отмена',
         },
       },
       statuses: {
         statuses: 'Статусы',
         createAction: 'Создать статус',
         id: 'ID',
-        name: 'Имя',
+        name: 'Наименование',
         updateAction: 'Изменить',
         deleteAction: 'Удалить',
         createdAt: 'Дата создания',
         new: {
           title: 'Создание статуса',
           submit: 'Создать',
+          back: 'Отмена',
         },
         update: {
           title: 'Изменение статуса',
           submit: 'Изменить',
+          back: 'Отмена',
         },
       },
       labels: {
         labels: 'Метки',
         createAction: 'Создать метку',
         id: 'ID',
-        name: 'Имя',
+        name: 'Наименование',
         updateAction: 'Изменить',
         deleteAction: 'Удалить',
         createdAt: 'Дата создания',
         new: {
           title: 'Создание метки',
           submit: 'Создать',
+          back: 'Отмена',
         },
         update: {
           title: 'Изменение метки',
           submit: 'Изменить',
+          back: 'Отмена',
         },
       },
       tasks: {
@@ -161,13 +167,21 @@ export default {
         updateAction: 'Изменить',
         deleteAction: 'Удалить',
         createdAt: 'Дата создания',
+        label: 'Метка',
+        onlyMyTasks: 'Только мои задачи',
+        showAction: 'Показать',
         new: {
           title: 'Создание задачи',
           submit: 'Создать',
+          back: 'Отмена',
         },
         update: {
           title: 'Изменение задачи',
           submit: 'Изменить',
+          back: 'Отмена',
+        },
+        show: {
+          back: 'Назад',
         },
       },
       welcome: {

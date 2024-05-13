@@ -8,3 +8,4 @@ block content
     input(type="hidden" name="_method" value="patch")
     +input(label, 'name', t('views.labels.name'), errors)(type="text")
     +submit(label)(value=t('views.labels.update.submit'))
+    +back(t('views.labels.update.back'), route('labels'))

@@ -7,3 +7,4 @@ block content
   +formFor()(action=route('labels') method='post')
     +input(label, 'name', t('views.labels.name'), errors)(type="text")
     +submit(label)(value=t('views.labels.new.submit'))
+    +back(t('views.labels.new.back'), route('labels'))
