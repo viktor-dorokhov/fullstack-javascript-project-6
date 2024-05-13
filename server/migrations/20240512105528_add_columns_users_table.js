@@ -10,4 +10,4 @@ export const down = (knex) => (
     table.dropColumn('first_name');
     table.dropColumn('last_name');
   })
-)
+);
