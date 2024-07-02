@@ -109,7 +109,7 @@ describe('test labels CRUD', () => {
   it('update', async () => {
     const params = getFakeLabel();
     const id = 1;
-    const labelExisting = await models.user.query().findById(1);
+    const labelExisting = await models.label.query().findById(1);
     const request = {
       method: 'PATCH',
       url: app.reverse('oneLabel', { id }),
@@ -119,7 +119,7 @@ describe('test labels CRUD', () => {
     };
 
     await app.inject(request);
-    const labelExistingSame = await models.user.query().findById(1);
+    const labelExistingSame = await models.label.query().findById(1);
     expect(labelExisting).toMatchObject(labelExistingSame);
 
     await app.inject({
@@ -137,8 +137,8 @@ describe('test labels CRUD', () => {
       url: app.reverse('oneLabel', { id }),
     };
 
-    const userExisting = await models.user.query().findById(id);
-    expect(userExisting).not.toBeUndefined();
+    const labelExisting = await models.label.query().findById(id);
+    expect(labelExisting).not.toBeUndefined();
 
     await app.inject({
       ...request,

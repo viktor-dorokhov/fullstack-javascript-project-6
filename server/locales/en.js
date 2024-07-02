@@ -40,6 +40,7 @@ export default {
         },
         delete: {
           success: 'Status deleted successfully',
+          errorTask: 'Impossible to delete status connected to a task',
           error: 'Failed to delete status',
         },
       },
@@ -54,6 +55,7 @@ export default {
         },
         delete: {
           success: 'Label deleted successfully',
+          errorTask: 'Impossible to delete label connected to a task',
           error: 'Failed to delete label',
         },
       },

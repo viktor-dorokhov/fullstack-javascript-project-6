@@ -53,6 +53,13 @@ export default (app) => {
     })
     .delete('/labels/:id', { preValidation: app.authenticate }, async (req, reply) => {
       const { id } = req.params;
+      const labelTasks = await LabelModel.query().findById(id).withGraphFetched('tasks');
+      if (labelTasks.tasks?.length) {
+        req.flash('error', i18next.t('flash.labels.delete.errorTask'));
+        reply.redirect(app.reverse('labels'));
+        return reply;
+      }
+
       try {
         await LabelModel.query().deleteById(Number(id));
         req.flash('info', i18next.t('flash.labels.delete.success'));
@@ -60,5 +67,6 @@ export default (app) => {
         req.flash('error', i18next.t('flash.labels.delete.error'));
       }
       reply.redirect(app.reverse('labels'));
+      return reply;
     });
 };

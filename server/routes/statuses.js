@@ -4,6 +4,7 @@ import i18next from 'i18next';
 
 export default (app) => {
   const StatusModel = app.objection.models.status;
+  const TaskModel = app.objection.models.task;
   app
     .get('/statuses', { name: 'statuses', preValidation: app.authenticate }, async (req, reply) => {
       const statuses = await StatusModel.query();
@@ -53,6 +54,13 @@ export default (app) => {
     })
     .delete('/statuses/:id', { preValidation: app.authenticate }, async (req, reply) => {
       const { id } = req.params;
+      const tasks = await TaskModel.query().where('statusId', id);
+      if (tasks.length) {
+        req.flash('error', i18next.t('flash.statuses.delete.errorTask'));
+        reply.redirect(app.reverse('statuses'));
+        return reply;
+      }
+
       try {
         await StatusModel.query().deleteById(Number(id));
         req.flash('info', i18next.t('flash.statuses.delete.success'));
@@ -60,5 +68,6 @@ export default (app) => {
         req.flash('error', i18next.t('flash.statuses.delete.error'));
       }
       reply.redirect(app.reverse('statuses'));
+      return reply;
     });
 };

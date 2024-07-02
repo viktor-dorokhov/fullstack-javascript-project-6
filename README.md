@@ -5,6 +5,7 @@ Task Manager – система управления задачами. Она п
 [![Actions Status](https://github.com/viktor-dorokhov/fullstack-javascript-project-6/actions/workflows/code-check.yml/badge.svg)](https://github.com/viktor-dorokhov/fullstack-javascript-project-6/actions)
 [![Actions Status](https://github.com/viktor-dorokhov/fullstack-javascript-project-6/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/viktor-dorokhov/fullstack-javascript-project-6/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/aa24e06c50125393cc05/maintainability)](https://codeclimate.com/github/viktor-dorokhov/fullstack-javascript-project-6/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/aa24e06c50125393cc05/test_coverage)](https://codeclimate.com/github/viktor-dorokhov/fullstack-javascript-project-6/test_coverage)
 
 ## Установка
 

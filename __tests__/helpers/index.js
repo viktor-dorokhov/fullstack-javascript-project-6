@@ -36,8 +36,49 @@ export const getFakeLabel = () => ({
 
 export const prepareLabelsData = async (app) => {
   const { knex } = app.objection;
-  const statuses = Array(10).fill().map(getFakeLabel);
-  await knex('labels').insert(statuses);
+  const labels = Array(10).fill().map(getFakeLabel);
+  await knex('labels').insert(labels);
+};
+
+export const getFakeTask = (withLabels) => {
+  const task = {
+    name: faker.word.adjective(),
+    description: faker.lorem.paragraph(),
+    statusId: faker.number.int({ min: 1, max: 10 }),
+    creatorId: 2, // Marjorie Thiel
+    executorId: faker.number.int({ min: 1, max: 3 }),
+  };
+  return withLabels
+    ? {
+      ...task,
+      labels: [faker.number.int({ min: 1, max: 2 }), faker.number.int({ min: 3, max: 4 })].sort(),
+    }
+    : task;
+};
+
+export const getFakeTaskLabel = (taskId) => ({
+  taskId,
+  labelId: faker.number.int({ min: 1, max: 10 }),
+});
+
+export const prepareTasksData = async (app) => {
+  await prepareUsersData(app);
+  await prepareLabelsData(app);
+  await prepareStatusesData(app);
+  const { knex } = app.objection;
+  const tasks = Array(5).fill().map(getFakeTask);
+  await knex('tasks').insert(tasks);
+
+  const taskLabels = [
+    getFakeTaskLabel(1),
+    getFakeTaskLabel(1),
+    getFakeTaskLabel(2),
+    getFakeTaskLabel(4),
+    getFakeTaskLabel(5),
+    getFakeTaskLabel(5),
+    getFakeTaskLabel(5),
+  ];
+  await knex('tasks_labels').insert(taskLabels);
 };
 
 export const signInApp = async (app) => {
