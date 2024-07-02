@@ -187,11 +187,9 @@ export default {
         },
       },
       welcome: {
-        index: {
-          hello: 'Hello from Hexlet!',
-          description: 'Online programming school',
-          more: 'Learn more',
-        },
+        title: 'Task manager',
+        description: 'Organize your entire team and yourself. Get full control over tasks',
+        start: 'Start',
       },
     },
   },

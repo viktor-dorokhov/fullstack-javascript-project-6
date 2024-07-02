@@ -3,7 +3,11 @@ extends ../layouts/application.pug
 block content
   .card
     .card-body.p-5.bg-light
-      .display-4= t('views.welcome.index.hello')
-      p.lead= t('views.welcome.index.description')
+      .display-4= t('views.welcome.title')
+      p.lead.m-1= t('views.welcome.description')
       hr
-      a.btn.btn-primary.btn-lg(href="https://hexlet.io")= t('views.welcome.index.more')
+      if isAuthenticated()
+        a.btn.btn-primary.btn-lg(href=route('tasks'))= t('views.welcome.start')
+      else
+        a.btn.btn-outline-primary.me-2(href=route('newSession'))= t('layouts.application.signIn')
+        a.btn.btn-primary(href=route('newUser'))= t('layouts.application.signUp')
