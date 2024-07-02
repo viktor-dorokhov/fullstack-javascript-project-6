@@ -84,6 +84,7 @@ const addHooks = (app) => {
     reply.locals = {
       isAuthenticated: () => req.isAuthenticated(),
       getUserId: () => req.user?.id,
+      getUrl: () => req.url,
     };
   });
   app.addHook('onError', async (req, reply, error) => {

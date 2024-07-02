@@ -1,7 +1,7 @@
 extends ../layouts/application.pug
 
 block content
-  a.btn.btn-primary(href='/statuses/new')= t('views.statuses.createAction')
+  a.btn.btn-primary(href=route('newStatus'))= t('views.statuses.createAction')
   .table-responsive
     table.table.table-striped.border.mt-3
       thead
