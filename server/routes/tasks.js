@@ -50,13 +50,9 @@ export default (app) => {
     })
     .post('/tasks', { preValidation: app.authenticate }, async (req, reply) => {
       const originalData = req.body.data;
-      const labelIds = [].concat((req.body.data.labels || [])).map((l) => ({ id: Number(l) }));
       const taskData = {
         ...originalData,
-        statusId: Number(originalData.statusId),
-        executorId: Number(originalData.executorId) || null,
         creatorId: req.user.id,
-        labels: labelIds,
       };
       try {
         await TaskModel.transaction(async (trx) => {
@@ -95,14 +91,10 @@ export default (app) => {
     .patch('/tasks/:id', { preValidation: app.authenticate }, async (req, reply) => {
       const { id } = req.params;
       const originalData = req.body.data;
-      const labelIds = [].concat((req.body.data.labels || [])).map((l) => ({ id: Number(l) }));
       const taskData = {
         ...originalData,
         id: Number(id),
-        statusId: Number(originalData.statusId),
-        executorId: Number(originalData.executorId) || null,
         creatorId: req.user.id,
-        labels: labelIds,
       };
       try {
         await TaskModel.transaction(async (trx) => {

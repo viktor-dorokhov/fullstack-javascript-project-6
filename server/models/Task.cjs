@@ -84,4 +84,16 @@ module.exports = class Task extends BaseModel {
       query.where('creatorId', userId);
     },
   };
+
+  $parseJson(json, opt) {
+    // eslint-disable-next-line no-param-reassign
+    json = super.$parseJson(json, opt);
+    const labelIds = [].concat((json.labels || [])).map((l) => ({ id: Number(l) }));
+    return {
+      ...json,
+      statusId: Number(json.statusId),
+      executorId: Number(json.executorId) || null,
+      labels: labelIds,
+    };
+  }
 };
