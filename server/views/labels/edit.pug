@@ -6,6 +6,6 @@ block header
 block content
   +formFor()(action=route('oneLabel', { id: label.id }) method='post')
     input(type="hidden" name="_method" value="patch")
-    +input(label, 'name', t('views.labels.name'), errors, true)(type="text")
+    +input(label, 'name', t('views.labels.name'), errors, {autofocus: true})(type="text")
     +submit(label)(value=t('views.labels.update.submit'))
     +back(t('views.labels.update.back'), route('labels'))

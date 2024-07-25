@@ -5,7 +5,7 @@ mixin formFor(entity = null)
   form&attributes(attributes)
     block
 
-mixin input(entity, propertyName, label, errors = {}, autofocus = false)
+mixin input(entity, propertyName, label, errors = {}, attrs = {autofocus: false})
   - propertyErrors = _.get(errors, propertyName)
   - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
   - inputId = getInputId(propertyName)
@@ -16,7 +16,7 @@ mixin input(entity, propertyName, label, errors = {}, autofocus = false)
       class=classLine
       value=_.get(entity, propertyName, '')
       placeholder=label || propertyName
-      autofocus= autofocus
+      autofocus= attrs.autofocus
     )&attributes(attributes)
     label(
       for= inputId
@@ -24,7 +24,7 @@ mixin input(entity, propertyName, label, errors = {}, autofocus = false)
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
-mixin textarea(entity, propertyName, label, errors = {}, autofocus = false)
+mixin textarea(entity, propertyName, label, errors = {}, attrs = {maxlength: false, autofocus: false})
   - propertyErrors = _.get(errors, propertyName)
   - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
   - inputId = getInputId(propertyName)
@@ -36,12 +36,13 @@ mixin textarea(entity, propertyName, label, errors = {}, autofocus = false)
       id= inputId
       name=getInputName(propertyName)
       class=classLine
-      autofocus= autofocus
+      autofocus= attrs.autofocus
+      maxlength= attrs.maxlength
     )&attributes(attributes)= _.get(entity, propertyName, '')
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
-mixin select(entity, propertyName, label, errors = {}, multiple = false)
+mixin select(entity, propertyName, label, errors = {}, attrs = {multiple: false})
   - propertyErrors = _.get(errors, propertyName)
   - classLine = 'form-select' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
   - inputId = getInputId(propertyName)
@@ -54,7 +55,7 @@ mixin select(entity, propertyName, label, errors = {}, multiple = false)
       name=getInputName(propertyName)
       class=classLine
       value=_.get(entity, propertyName, '')
-      multiple= multiple
+      multiple= attrs.multiple
     )&attributes(attributes)
       block
     if !_.isEmpty(propertyErrors)
