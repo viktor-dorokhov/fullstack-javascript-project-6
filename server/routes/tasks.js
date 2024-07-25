@@ -21,10 +21,18 @@ export default (app) => {
     .get('/tasks', { name: 'tasks', preValidation: app.authenticate }, async (req, reply) => {
       const { query: filterQuery } = req;
       let query = TaskModel.query();
-      query = query.modify(filterQuery.status ? 'filterStatus' : 'defaultSelects', filterQuery.status);
-      query = query.modify(filterQuery.executor ? 'filterExecutor' : 'defaultSelects', filterQuery.executor);
-      query = query.modify(filterQuery.label ? 'filterLabel' : 'defaultSelects', filterQuery.label);
-      query = query.modify(filterQuery.isCreatorUser ? 'filterIsCreatorUser' : 'defaultSelects', req.user.id);
+      if (filterQuery.status) {
+        query = query.modify('filterStatus', filterQuery.status);
+      }
+      if (filterQuery.executor) {
+        query = query.modify('filterExecutor', filterQuery.executor);
+      }
+      if (filterQuery.label) {
+        query = query.modify('filterLabel', filterQuery.label);
+      }
+      if (filterQuery.isCreatorUser) {
+        query = query.modify('filterIsCreatorUser', req.user.id);
+      }
       const tasks = await query.withGraphFetched('[status, creator, executor, labels]');
       const { users, statuses, labels } = await getRelatedData();
       reply.render('tasks/index', {
