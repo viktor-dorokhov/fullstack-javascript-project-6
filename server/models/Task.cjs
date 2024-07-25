@@ -62,4 +62,26 @@ module.exports = class Task extends BaseModel {
       },
     };
   }
-}
+
+  static modifiers = {
+    defaultSelects(query) {
+      query.select();
+    },
+
+    filterStatus(query, statusId) {
+      query.where('statusId', statusId);
+    },
+
+    filterExecutor(query, executorId) {
+      query.where('executorId', executorId);
+    },
+
+    filterLabel(query, labelId) {
+      query.joinRelated('labels').where('labels.id', labelId);
+    },
+
+    filterIsCreatorUser(query, userId) {
+      query.where('creatorId', userId);
+    },
+  };
+};
