@@ -5,7 +5,7 @@ mixin formFor(entity = null)
   form&attributes(attributes)
     block
 
-mixin input(entity, propertyName, label, errors = {})
+mixin input(entity, propertyName, label, errors = {}, autofocus = false)
   - propertyErrors = _.get(errors, propertyName)
   - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
   - inputId = getInputId(propertyName)
@@ -16,6 +16,7 @@ mixin input(entity, propertyName, label, errors = {})
       class=classLine
       value=_.get(entity, propertyName, '')
       placeholder=label || propertyName
+      autofocus= autofocus
     )&attributes(attributes)
     label(
       for= inputId
@@ -23,7 +24,7 @@ mixin input(entity, propertyName, label, errors = {})
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
-mixin textarea(entity, propertyName, label, errors = {})
+mixin textarea(entity, propertyName, label, errors = {}, autofocus = false)
   - propertyErrors = _.get(errors, propertyName)
   - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
   - inputId = getInputId(propertyName)
@@ -35,6 +36,7 @@ mixin textarea(entity, propertyName, label, errors = {})
       id= inputId
       name=getInputName(propertyName)
       class=classLine
+      autofocus= autofocus
     )&attributes(attributes)= _.get(entity, propertyName, '')
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
